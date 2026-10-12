@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Hub</title>
+<style>
+:root{--bg:#0b0a1a;--panel:rgba(255,255,255,.045);--panel2:rgba(255,255,255,.07);--line:rgba(255,255,255,.09);
+  --text:#ebe8ff;--muted:#a7a2c9;--dim:#7a759c;--violet:#9b7bff;--teal:#3fd7c4;--pink:#ff7aa8;--amber:#ffc36b;--green:#6fe3a5}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+  background:radial-gradient(1200px 700px at 78% 8%,rgba(109,63,224,.35),transparent 60%),radial-gradient(900px 600px at 10% 95%,rgba(19,168,158,.25),transparent 60%),var(--bg);background-attachment:fixed}
+.wrap{max-width:1320px;margin:0 auto;padding:26px 24px 48px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+h1{margin:0;font-size:28px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+.clock{text-align:right}.clock b{display:block;font-size:30px;font-weight:500;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;backdrop-filter:blur(8px);min-width:0}
+.card h2{margin:0 0 12px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.s4{grid-column:span 4}.s5{grid-column:span 5}.s7{grid-column:span 7}.s12{grid-column:span 12}
+@media(max-width:1000px){.s4,.s5,.s7{grid-column:span 12}}
+button,.btn{font:inherit;font-size:14px;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+button:hover,.btn:hover{border-color:rgba(255,255,255,.25)}
+.primary{background:linear-gradient(135deg,#7a5cff,#4b33c9)!important;border-color:transparent!important}
+input,textarea,select{font:inherit;color:var(--text);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--violet)}
+select{width:auto;font-size:13px;padding:4px 8px;text-transform:none;letter-spacing:0}
+.hint{color:var(--dim);font-size:12px;margin-top:6px}
+.x{background:none;border:none;color:var(--dim);padding:2px 6px;font-size:13px}
+.x:hover{color:var(--text)}
+.pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:rgba(155,123,255,.18);color:#cdbcff;font-weight:500;letter-spacing:0;text-transform:none}
+.hero{padding:22px}
+.qrow{display:flex;gap:10px}
+.qrow input{font-size:17px;padding:12px 14px}
+.qrow button{padding:10px 18px;font-size:15px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.chips label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;cursor:pointer}
+.chips input{width:auto;accent-color:var(--violet);margin:0}
+.recent{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.recent button{font-size:12px;padding:3px 10px;border-radius:999px;color:var(--muted)}
+.results{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:16px;margin-top:18px}
+@media(max-width:1000px){.results{grid-template-columns:1fr}}
+.results[hidden]{display:none}
+.sec{background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.sec h3{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wiki img{float:right;width:96px;height:96px;object-fit:cover;border-radius:10px;margin:0 0 8px 12px}
+.wiki h4{margin:0 0 6px;font-size:17px}
+.wiki p{margin:0 0 10px;color:#d9d5f5;font-size:14px}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;clear:both}
+.actions .btn,.actions button{font-size:13px;padding:5px 10px}
+.paper{padding:12px 0;border-bottom:1px solid var(--line)}
+.paper:first-child{padding-top:0}
+.paper:last-child{border-bottom:none}
+.paper a.t{color:var(--text);font-weight:600;text-decoration:none;font-size:15px}
+.paper a.t:hover{color:#cdbcff}
+.meta{color:var(--muted);font-size:13px;margin:3px 0}
+.abs{color:#c9c4e6;font-size:13px;margin:4px 0 6px}
+.prow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.prow .btn,.prow button{font-size:12px;padding:3px 9px}
+.loading,.empty{color:var(--dim);font-size:14px;padding:8px 0}
+.timer{display:flex;flex-direction:column;align-items:center;gap:10px}
+.ring{position:relative;width:176px;height:176px}
+.ring svg{transform:rotate(-90deg)}
+.ring .t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;text-align:center}
+.ring .t b{font-size:38px;font-weight:500;font-variant-numeric:tabular-nums}
+.ring .t span{color:var(--muted);font-size:12px;line-height:1.3;max-height:2.6em;overflow:hidden}
+.row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.seg button{padding:4px 9px;font-size:12px}.seg button.on{border-color:var(--violet);background:rgba(155,123,255,.18)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:44px;width:100%;margin:4px 0 18px}
+.bars div{flex:1;background:linear-gradient(180deg,var(--violet),#4b33c9);border-radius:4px 4px 2px 2px;min-height:3px;position:relative}
+.bars div span{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font-size:11px;color:var(--dim)}
+.log{list-style:none;margin:0;padding:0;font-size:13px;width:100%;max-height:110px;overflow:auto}
+.log li{display:flex;justify-content:space-between;gap:8px;padding:3px 0;color:var(--muted);border-bottom:1px solid var(--line)}
+.log li b{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list{list-style:none;margin:10px 0 0;padding:0;max-height:300px;overflow:auto}
+.list li{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.list li.done span{color:var(--dim);text-decoration:line-through}
+.list li>span,.list li>a{flex:1;min-width:0}
+.list li a{color:var(--text);text-decoration:none}
+.list li a span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list li a:hover{color:#cdbcff}
+.list li small{color:var(--dim);display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list input[type=checkbox]{width:17px;height:17px;accent-color:var(--violet);flex:none}
+form.inline{display:flex;gap:8px}
+.cite{margin-top:12px}
+.cite .box{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:#d9d5f5}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{font-size:13px;padding:5px 11px}.tabs button.on{border-color:var(--teal);background:rgba(63,215,196,.14)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child{white-space:nowrap;font-weight:500}
+code,pre{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px}
+pre{background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;margin:8px 0;white-space:pre-wrap}
+textarea{min-height:220px;resize:vertical;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1><span id="greet">Hello</span><button class="x" id="setName" title="Set your name" style="font-size:13px;vertical-align:middle;margin-left:6px">✎</button></h1>
+      <div class="sub">Study Hub · <span id="date"></span></div>
+    </div>
+    <div class="clock"><b id="time">--:--</b><span class="sub" id="today-focus">0 focus sessions today</span></div>
+  </header>
+
+  <div class="grid">
+    <section class="card s12 hero">
+      <h2>Stuck on something? <span class="hint" style="margin:0;text-transform:none;letter-spacing:0;font-weight:400">Press / to jump here</span></h2>
+      <form class="qrow" id="searchForm">
+        <input id="q" placeholder="Any topic, concept or question: predictive coding, P300, mixed models, working memory…" autocomplete="off">
+        <button class="primary">Search</button>
+      </form>
+      <div class="chips" id="engines">
+        <span class="hint" style="margin:0 4px 0 0">Also open:</span>
+        <label><input type="checkbox" value="scholar" checked>Google Scholar</label>
+        <label><input type="checkbox" value="pubmed">PubMed</label>
+        <label><input type="checkbox" value="psyarxiv">PsyArXiv</label>
+        <label><input type="checkbox" value="semantic">Semantic Scholar</label>
+        <label><input type="checkbox" value="openneuro">OpenNeuro</label>
+        <label><input type="checkbox" value="sep">Stanford Encyclopedia</label>
+        <label><input type="checkbox" value="youtube">YouTube lectures</label>
+      </div>
+      <div class="recent" id="recent"></div>
+      <div class="results" id="results" hidden>
+        <div class="sec">
+          <h3>Quick explanation</h3>
+          <div class="wiki" id="wiki"></div>
+          <div class="actions" id="explain"></div>
+        </div>
+        <div class="sec">
+          <h3>Top papers
+            <select id="sort" aria-label="Sort papers"><option value="relevance">Most relevant</option><option value="cited">Most cited</option><option value="new">Newest</option><option value="review">Reviews only</option></select>
+          </h3>
+          <div id="papers"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card s4">
+      <h2>Focus timer <span class="pill" id="streak">streak 0d</span></h2>
+      <div class="timer">
+        <input id="topic" placeholder="What are you focusing on?" style="text-align:center">
+        <div class="seg row" id="modes">
+          <button data-m="25" class="on">Focus 25</button><button data-m="50">Deep 50</button><button data-m="5">Break 5</button><button data-m="15">Long 15</button>
+        </div>
+        <div class="ring">
+          <svg width="176" height="176"><circle cx="88" cy="88" r="78" stroke="rgba(255,255,255,.08)" stroke-width="10" fill="none"/>
+            <circle id="arc" cx="88" cy="88" r="78" stroke="url(#g)" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="490.1" stroke-dashoffset="0"/>
+            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#9b7bff"/><stop offset="1" stop-color="#3fd7c4"/></linearGradient></defs></svg>
+          <div class="t"><b id="tleft">25:00</b><span id="tlabel">Focus</span></div>
+        </div>
+        <div class="row"><button class="primary" id="start">Start</button><button id="reset">Reset</button></div>
+        <div style="width:100%"><div class="sub" style="font-size:12px">Sessions, last 7 days</div><div class="bars" id="bars"></div></div>
+        <ul class="log" id="log"></ul>
+      </div>
+    </section>
+
+    <section class="card s4">
+      <h2>Study tasks <button class="x" id="clearDone">clear done</button></h2>
+      <form class="inline" id="taskForm"><input id="taskIn" placeholder="Add a task…" autocomplete="off"><button class="primary">Add</button></form>
+      <ul class="list" id="tasks"></ul>
+    </section>
+
+    <section class="card s4">
+      <h2>Reading list <span class="pill" id="rcount">0</span></h2>
+      <form class="inline" id="doiForm"><input id="doi" placeholder="Paste a DOI or doi.org link" autocomplete="off"><button>Look up</button></form>
+      <div class="cite" id="doiOut"></div>
+      <ul class="list" id="reading"></ul>
+    </section>
+
+    <section class="card s5">
+      <h2>My shelf <button class="x" id="shelfToggle">+ add</button></h2>
+      <form id="shelfForm" hidden style="gap:8px;margin-bottom:8px">
+        <input id="shelfName" placeholder="Name, e.g. Phase 3 cheat sheet" autocomplete="off" style="margin-bottom:8px">
+        <input id="shelfUrl" placeholder="Link, or drag a file from Finder into this box" autocomplete="off" style="margin-bottom:8px">
+        <div style="display:flex;gap:8px"><button class="primary">Save</button><button type="button" id="shelfCancel">Cancel</button></div>
+      </form>
+      <ul class="list" id="shelf"></ul>
+      <div class="hint">Course PDFs, lecture pages, datasets, docs: anything you open often. Drag a file from Finder into the link box to add it.</div>
+    </section>
+
+    <section class="card s7">
+      <h2>Scratchpad <button class="x" id="dl">save .md</button></h2>
+      <textarea id="notes" placeholder="Ideas, open questions, definitions to look up…"></textarea>
+      <div class="hint" id="saved">Saved automatically in this browser.</div>
+    </section>
+
+    <section class="card s12">
+      <h2>Quick reference</h2>
+      <div class="tabs" id="tabs">
+        <button data-t="stats" class="on">Which stats test?</button><button data-t="brain">Brain regions</button><button data-t="bands">EEG bands</button><button data-t="erp">ERP components</button><button data-t="r">R mixed models</button><button data-t="read">Reading a paper</button>
+      </div>
+      <div id="tab-stats">
+        <table><tr><th>Your design</th><th>Test</th></tr>
+        <tr><td>2 groups, continuous outcome</td><td>Independent t-test · Mann–Whitney if non-normal</td></tr>
+        <tr><td>Same people, 2 conditions</td><td>Paired t-test · Wilcoxon signed-rank</td></tr>
+        <tr><td>3+ groups</td><td>One-way ANOVA · Kruskal–Wallis</td></tr>
+        <tr><td>Repeated measures, 3+ conditions</td><td>RM-ANOVA, or better: linear mixed model</td></tr>
+        <tr><td>Trials nested in participants</td><td>Linear mixed model (<code>lmer</code>) with random effects</td></tr>
+        <tr><td>Binary outcome (correct/incorrect)</td><td>Logistic mixed model (<code>glmer</code>, binomial)</td></tr>
+        <tr><td>Two continuous variables</td><td>Pearson r · Spearman ρ</td></tr>
+        <tr><td>Two categorical variables</td><td>Chi-square · Fisher's exact for small samples</td></tr>
+        <tr><td>Many channels × time points</td><td>Cluster-based permutation tests</td></tr></table>
+      </div>
+      <div id="tab-brain" hidden>
+        <table><tr><th>Region</th><th>Key functions</th></tr>
+        <tr><td>Prefrontal cortex</td><td>Executive function, planning, working memory, decision making</td></tr>
+        <tr><td>Parietal lobe</td><td>Sensory integration, spatial attention, numerical cognition</td></tr>
+        <tr><td>Temporal lobe</td><td>Auditory processing, language comprehension, memory</td></tr>
+        <tr><td>Occipital lobe</td><td>Visual processing</td></tr>
+        <tr><td>Hippocampus</td><td>Episodic memory formation, spatial navigation</td></tr>
+        <tr><td>Amygdala</td><td>Emotional salience, fear learning</td></tr>
+        <tr><td>Anterior cingulate</td><td>Conflict and error monitoring, motivation</td></tr>
+        <tr><td>Insula</td><td>Interoception, emotional awareness</td></tr>
+        <tr><td>Basal ganglia</td><td>Action selection, reward learning, habits</td></tr>
+        <tr><td>Cerebellum</td><td>Motor coordination, timing, some cognitive roles</td></tr></table>
+      </div>
+      <div id="tab-bands" hidden>
+        <table><tr><th>Band</th><th>Hz</th><th>Associated with</th></tr>
+        <tr><td>Delta δ</td><td>0.5–4</td><td>Deep sleep, slow-wave activity</td></tr>
+        <tr><td>Theta θ</td><td>4–8</td><td>Memory encoding, working memory, frontal-midline theta in cognitive control</td></tr>
+        <tr><td>Alpha α</td><td>8–13</td><td>Relaxed wakefulness, inhibition; frontal alpha asymmetry in emotion research</td></tr>
+        <tr><td>Beta β</td><td>13–30</td><td>Active thinking, motor control</td></tr>
+        <tr><td>Gamma γ</td><td>30–100</td><td>Feature binding, perception; prone to muscle artifacts</td></tr></table>
+        <div class="hint">Band edges vary by paper; report the exact ranges you use.</div>
+      </div>
+      <div id="tab-erp" hidden>
+        <table><tr><th>Component</th><th>Latency</th><th>Typically reflects</th></tr>
+        <tr><td>P1</td><td>~100 ms</td><td>Early visual processing, spatial attention</td></tr>
+        <tr><td>N1</td><td>~100–200 ms</td><td>Sensory processing and attention</td></tr>
+        <tr><td>N170</td><td>~170 ms</td><td>Face processing</td></tr>
+        <tr><td>MMN</td><td>~150–250 ms</td><td>Auditory deviance detection</td></tr>
+        <tr><td>P300 (P3b)</td><td>~300–600 ms</td><td>Context updating, target detection</td></tr>
+        <tr><td>N400</td><td>~400 ms</td><td>Semantic expectancy violations</td></tr>
+        <tr><td>LPP</td><td>400–1000+ ms</td><td>Emotional and motivational salience</td></tr>
+        <tr><td>ERN</td><td>~50–100 ms after an error</td><td>Error monitoring</td></tr></table>
+      </div>
+      <div id="tab-r" hidden>
+<pre>library(lme4); library(lmerTest)
+m  &lt;- lmer(score ~ condition + (1 | participant) + (1 | item), data = d)
+m2 &lt;- lmer(score ~ condition + (1 + condition | participant), data = d)
+anova(m, m2)                       # compare models
+performance::check_model(m)        # assumptions at a glance
+broom.mixed::tidy(m, conf.int = TRUE)</pre>
+        <div class="hint"><code>(1 | g)</code> random intercept · <code>(1 + x | g)</code> intercept and slope · <code>(1 | a) + (1 | b)</code> crossed effects.</div>
+      </div>
+      <div id="tab-read" hidden>
+        <table><tr><th>Pass</th><th>What to do</th></tr>
+        <tr><td>1 · 5 minutes</td><td>Title, abstract, figures, conclusion. Decide whether it's worth a deeper read.</td></tr>
+        <tr><td>2 · 30 minutes</td><td>Intro and methods: the question, the sample, the design, the key analysis. Note anything unclear.</td></tr>
+        <tr><td>3 · deep</td><td>Results in detail. Could you re-run it? What are the limitations? What would you do next?</td></tr>
+        <tr><td>Write down</td><td>One sentence: "They showed X using Y in Z, but W is unresolved."</td></tr></table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const store={get(k,d){try{const v=localStorage.getItem('hub.'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+             set(k,v){try{localStorage.setItem('hub.'+k,JSON.stringify(v))}catch(e){}}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dayKey=(d=new Date())=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+function tick(){const n=new Date();$('#time').textContent=n.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  $('#date').textContent=n.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'});
+  const h=n.getHours(),nm=store.get('name','');$('#greet').textContent=(h<12?'Good morning':h<18?'Good afternoon':'Good evening')+(nm?', '+nm:'');
+  $('#setName').textContent=nm?'✎':'✎ set your name';}
+$('#setName').onclick=()=>{const v=prompt('What should the Hub call you?',store.get('name',''));if(v!==null){store.set('name',v.trim());tick()}};
+tick();setInterval(tick,15000);
+
+/* ---------- search ---------- */
+const E={scholar:q=>`https://scholar.google.com/scholar?q=${q}`,pubmed:q=>`https://pubmed.ncbi.nlm.nih.gov/?term=${q}`,
+  psyarxiv:q=>`https://osf.io/preprints/psyarxiv/discover?search=${q}`,semantic:q=>`https://www.semanticscholar.org/search?q=${q}`,
+  openneuro:q=>`https://openneuro.org/search?query=${q}`,sep:q=>`https://plato.stanford.edu/search/searcher.py?query=${q}`,
+  youtube:q=>`https://www.youtube.com/results?search_query=${q}+lecture`};
+const savedE=store.get('engines2',null);
+document.querySelectorAll('#engines input').forEach(c=>{if(savedE)c.checked=savedE.includes(c.value);
+  c.onchange=()=>store.set('engines2',[...document.querySelectorAll('#engines input:checked')].map(x=>x.value))});
+let current='';
+function renderRecent(){const r=store.get('recent',[]);
+  $('#recent').innerHTML=r.length?'<span class="hint" style="margin:3px 4px 0 0">Recent:</span>'+r.map(t=>`<button type="button">${esc(t)}</button>`).join(''):'';
+  [...$('#recent').querySelectorAll('button')].forEach(b=>b.onclick=()=>{$('#q').value=b.textContent;runSearch(false)});}
+function runSearch(openTabs){
+  const q=$('#q').value.trim();if(!q)return;current=q;
+  store.set('recent',[q,...store.get('recent',[]).filter(x=>x.toLowerCase()!==q.toLowerCase())].slice(0,8));renderRecent();
+  const enc=encodeURIComponent(q);
+  if(openTabs)document.querySelectorAll('#engines input:checked').forEach(c=>window.open(E[c.value](enc),'_blank'));
+  $('#results').hidden=false;loadWiki(q);loadPapers(q);
+  const prompt=encodeURIComponent(`I'm studying cognitive science and I'm stuck on "${q}". Explain it simply first, then in more depth, with one concrete example and the key papers or researchers I should know.`);
+  $('#explain').innerHTML=`<a class="btn" target="_blank" href="https://claude.ai/new?q=${prompt}">✦ Explain with Claude</a>
+    <a class="btn" target="_blank" href="https://plato.stanford.edu/search/searcher.py?query=${enc}">Stanford Encyclopedia</a>
+    <a class="btn" target="_blank" href="https://www.youtube.com/results?search_query=${enc}+lecture">Lectures</a>
+    <button type="button" id="focusThis">⏱ Focus on this</button>`;
+  $('#focusThis').onclick=()=>{$('#topic').value=q;store.set('topic',q);draw();$('#topic').scrollIntoView({behavior:'smooth',block:'center'})};
+}
+$('#searchForm').onsubmit=e=>{e.preventDefault();runSearch(true)};
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$('#q').focus()}});
+
+async function loadWiki(q){
+  const box=$('#wiki');box.innerHTML='<div class="loading">Finding an explanation…</div>';
+  try{
+    const s=await (await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=1&format=json&origin=*`)).json();
+    const hit=s.query?.search?.[0];
+    if(!hit){box.innerHTML='<div class="empty">No encyclopedia entry found. Try "Explain with Claude" below.</div>';return}
+    const p=await (await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(hit.title.replace(/ /g,'_'))}`)).json();
+    if(q!==current)return;
+    box.innerHTML=`${p.thumbnail?`<img src="${esc(p.thumbnail.source)}" alt="">`:''}<h4>${esc(p.title)}</h4><p>${esc(p.extract)}</p>
+      <a class="hint" style="color:var(--muted)" target="_blank" href="${esc(p.content_urls?.desktop?.page)}">Read the full article on Wikipedia →</a>`;
+  }catch(e){box.innerHTML='<div class="empty">Couldn\'t reach Wikipedia. Check your internet connection.</div>'}
+}
+function abstractOf(w){const inv=w.abstract_inverted_index;if(!inv)return'';const arr=[];
+  for(const [word,pos] of Object.entries(inv))for(const p of pos)arr[p]=word;
+  const t=arr.filter(Boolean).join(' ');return t.length>260?t.slice(0,260).replace(/\s\S*$/,'')+'…':t}
+function authorsOf(w,n=3){const a=(w.authorships||[]).map(x=>x.author?.display_name).filter(Boolean);return a.length>n?a.slice(0,n).join(', ')+' et al.':a.join(', ')}
+async function loadPapers(q){
+  const box=$('#papers');box.innerHTML='<div class="loading">Searching 250M+ papers…</div>';
+  const sort=$('#sort').value;
+  let url=`https://api.openalex.org/works?search=${encodeURIComponent(q)}&per-page=8&select=id,display_name,publication_year,cited_by_count,doi,authorships,primary_location,open_access,abstract_inverted_index,type`;
+  if(sort==='cited')url+='&sort=cited_by_count:desc';
+  if(sort==='new')url+='&sort=publication_date:desc&filter=cited_by_count:>0';
+  if(sort==='review')url+='&filter=type:review';
+  try{
+    const d=await (await fetch(url)).json();if(q!==current)return;const ws=d.results||[];
+    if(!ws.length){box.innerHTML='<div class="empty">No papers found. Try fewer or different words.</div>';return}
+    box.innerHTML=ws.map((w,i)=>{const link=w.doi||w.id,oa=w.open_access?.oa_url,src=w.primary_location?.source?.display_name;
+      return `<div class="paper"><a class="t" target="_blank" href="${esc(link)}">${esc(w.display_name)}</a>
+        <div class="meta">${esc(authorsOf(w))}${w.publication_year?' · '+w.publication_year:''}${src?' · <i>'+esc(src)+'</i>':''}</div>
+        ${abstractOf(w)?`<div class="abs">${esc(abstractOf(w))}</div>`:''}
+        <div class="prow"><span class="pill">${(w.cited_by_count||0).toLocaleString()} citations</span>${oa?`<a class="btn" target="_blank" href="${esc(oa)}" style="color:var(--green)">Free PDF</a>`:''}
+          <button type="button" data-save="${i}">+ Reading list</button></div></div>`}).join('');
+    box.querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>{const w=ws[+b.dataset.save];
+      addReading({title:w.display_name,url:w.doi||w.id,meta:`${authorsOf(w,1)}${w.publication_year?', '+w.publication_year:''}`});b.textContent='✓ Saved';b.disabled=true});
+  }catch(e){box.innerHTML='<div class="empty">Couldn\'t reach the paper database. Check your internet connection.</div>'}
+}
+$('#sort').onchange=()=>{if(current)loadPapers(current)};
+renderRecent();
+
+/* ---------- reading list + DOI ---------- */
+let reading=store.get('reading',[]);
+function addReading(it){if(reading.some(r=>r.url===it.url))return;reading.unshift({...it,d:false});renderReading()}
+function renderReading(){$('#rcount').textContent=reading.filter(r=>!r.d).length;
+  $('#reading').innerHTML=reading.length?reading.map((r,i)=>`<li class="${r.d?'done':''}"><input type="checkbox" data-i="${i}" ${r.d?'checked':''} title="Mark as read"><a target="_blank" href="${esc(r.url)}"><span>${esc(r.title)}</span><small>${esc(r.meta||'')}</small></a><button class="x" data-del="${i}" aria-label="Remove">×</button></li>`).join('')
+    :'<li class="empty">Save papers from your search results, or look one up by DOI.</li>';store.set('reading',reading)}
+$('#reading').onclick=e=>{const t=e.target;if(t.dataset.i!==undefined){reading[+t.dataset.i].d=t.checked;renderReading()}
+  if(t.dataset.del!==undefined){reading.splice(+t.dataset.del,1);renderReading()}};
+function apa(w){const a=(w.authorships||[]).map(x=>{const n=(x.author?.display_name||'').trim().split(/\s+/);if(!n[0])return'';const last=n.pop();
+    return `${last}, ${n.map(p=>p[0].toUpperCase()+'.').join(' ')}`.trim().replace(/,$/,'')}).filter(Boolean);
+  const au=a.length<=1?a.join(''):a.length<=20?a.slice(0,-1).join(', ')+', & '+a.at(-1):a.slice(0,19).join(', ')+', … '+a.at(-1);
+  const src=w.primary_location?.source?.display_name;
+  const ti=w.display_name||'';
+  return `${esc(au)} (${w.publication_year||'n.d.'}). ${esc(ti)}${/[.?!]$/.test(ti)?'':'.'}${src?' <i>'+esc(src)+'</i>.':''} ${esc(w.doi||'')}`}
+$('#doiForm').onsubmit=async e=>{e.preventDefault();const raw=$('#doi').value.trim();if(!raw)return;
+  const doi=raw.replace(/^https?:\/\/(dx\.)?doi\.org\//i,'').replace(/^doi:\s*/i,'');const out=$('#doiOut');out.innerHTML='<div class="loading">Looking up…</div>';
+  try{const r=await fetch(`https://api.openalex.org/works/doi:${encodeURIComponent(doi)}`);if(!r.ok)throw 0;const w=await r.json();const oa=w.open_access?.oa_url;
+    out.innerHTML=`<div class="box"><b>${esc(w.display_name)}</b><div class="meta">${esc(authorsOf(w))} · ${w.publication_year||''} · ${(w.cited_by_count||0).toLocaleString()} citations</div>
+      <div style="margin:8px 0 4px;color:var(--muted);font-size:12px">APA 7 citation</div><div id="apa">${apa(w)}</div>
+      <div class="prow" style="margin-top:8px"><a class="btn" target="_blank" href="https://doi.org/${esc(doi)}">Open paper</a>${oa?`<a class="btn" target="_blank" href="${esc(oa)}" style="color:var(--green)">Free PDF</a>`:''}
+      <button type="button" id="copyApa">Copy citation</button><button type="button" id="saveDoi">+ Reading list</button><button type="button" class="x" id="closeDoi">close</button></div></div>`;
+    $('#copyApa').onclick=()=>{navigator.clipboard.writeText($('#apa').innerText).then(()=>$('#copyApa').textContent='✓ Copied',()=>{})};
+    $('#saveDoi').onclick=()=>{addReading({title:w.display_name,url:'https://doi.org/'+doi,meta:`${authorsOf(w,1)}, ${w.publication_year||''}`});$('#saveDoi').textContent='✓ Saved'};
+    $('#closeDoi').onclick=()=>{out.innerHTML='';$('#doi').value=''};
+  }catch(err){out.innerHTML=`<div class="box">Couldn't find that DOI in the database. <a class="btn" target="_blank" href="https://doi.org/${esc(doi)}" style="margin-left:6px">Try doi.org</a></div>`}};
+renderReading();
+
+/* ---------- timer ---------- */
+let mins=25,left=25*60,running=null,label='Focus',endAt=0;const C=490.1;
+$('#topic').value=store.get('topic','');$('#topic').oninput=()=>{store.set('topic',$('#topic').value);draw()};
+function draw(){const m=Math.floor(left/60),s=left%60;$('#tleft').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  $('#arc').style.strokeDashoffset=C*(1-left/(mins*60));
+  $('#tlabel').textContent=label==='Focus'&&$('#topic').value.trim()?$('#topic').value.trim():label;
+  document.title=running?`${$('#tleft').textContent} · ${$('#tlabel').textContent}`:'Study Hub';}
+function stop(){clearInterval(running);running=null;$('#start').textContent='Start'}
+function chime(){try{const a=new AudioContext();[0,.25,.5].forEach((t,i)=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=[660,880,990][i];
+  g.gain.setValueAtTime(.0001,a.currentTime+t);g.gain.exponentialRampToValueAtTime(.2,a.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+t+.5);
+  o.connect(g).connect(a.destination);o.start(a.currentTime+t);o.stop(a.currentTime+t+.55)})}catch(e){}}
+function finish(){stop();chime();
+  if(label==='Focus'){const h=store.get('history',{});h[dayKey()]=(h[dayKey()]||0)+1;store.set('history',h);
+    const lg=store.get('log',[]);lg.unshift({t:$('#topic').value.trim()||'Untitled session',m:mins,at:Date.now()});store.set('log',lg.slice(0,60));renderStats()}
+  try{new Notification(label==='Focus'?'Focus session done. Take a break.':'Break over. Back to it.')}catch(e){}
+  left=mins*60;draw()}
+$('#start').onclick=()=>{if(running){stop();draw();return}
+  try{if(Notification&&Notification.permission==='default')Notification.requestPermission()}catch(e){}
+  endAt=Date.now()+left*1000;$('#start').textContent='Pause';
+  running=setInterval(()=>{left=Math.max(0,Math.round((endAt-Date.now())/1000));draw();if(left<=0)finish()},500)};
+$('#reset').onclick=()=>{stop();left=mins*60;draw()};
+document.querySelectorAll('#modes button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#modes button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  mins=+b.dataset.m;left=mins*60;label=mins>=25?'Focus':'Break';stop();draw()});
+function renderStats(){const h=store.get('history',{});const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return d});
+  const vals=days.map(d=>h[dayKey(d)]||0),max=Math.max(4,...vals);
+  $('#bars').innerHTML=vals.map((v,i)=>`<div style="height:${Math.max(6,v/max*100)}%;opacity:${v?1:.25}" title="${v} sessions"><span>${days[i].toLocaleDateString([], {weekday:'narrow'})}</span></div>`).join('');
+  $('#today-focus').textContent=`${vals[6]} focus session${vals[6]===1?'':'s'} today`;
+  let s=0,i=h[dayKey()]?0:1;for(;;i++){const d=new Date();d.setDate(d.getDate()-i);if(!h[dayKey(d)])break;s++}
+  $('#streak').textContent=`streak ${s}d`;
+  $('#log').innerHTML=store.get('log',[]).slice(0,12).map(x=>`<li><b>${esc(x.t)}</b><span>${x.m} min · ${new Date(x.at).toLocaleDateString([], {month:'short',day:'numeric'})}</span></li>`).join('');}
+draw();renderStats();
+
+/* ---------- tasks ---------- */
+let tasks=store.get('tasks',[]);
+function renderTasks(){$('#tasks').innerHTML=tasks.length?tasks.map((t,i)=>`<li class="${t.d?'done':''}"><input type="checkbox" data-i="${i}" ${t.d?'checked':''}><span>${esc(t.t)}</span><button class="x" data-del="${i}" aria-label="Delete">×</button></li>`).join('')
+  :'<li class="empty">Nothing yet. Add what you want to get done today.</li>';store.set('tasks',tasks)}
+$('#taskForm').onsubmit=e=>{e.preventDefault();const v=$('#taskIn').value.trim();if(!v)return;tasks.push({t:v,d:false});$('#taskIn').value='';renderTasks()};
+$('#tasks').onclick=e=>{const t=e.target;if(t.dataset.i!==undefined){tasks[+t.dataset.i].d=t.checked;renderTasks()}
+  if(t.dataset.del!==undefined){tasks.splice(+t.dataset.del,1);renderTasks()}};
+$('#clearDone').onclick=()=>{tasks=tasks.filter(t=>!t.d);renderTasks()};
+renderTasks();
+
+/* ---------- shelf ---------- */
+let shelf=store.get('shelf',[]);
+const pretty=u=>{try{return decodeURIComponent(u).replace(/^file:\/\/\/Users\/[^/]+\//,'~/').replace(/^https?:\/\//,'')}catch(e){return u}};
+function renderShelf(){$('#shelf').innerHTML=shelf.length?shelf.map((s,i)=>`<li><a href="${esc(s.u)}" target="_blank"><span>${esc(s.n)}</span><small>${esc(pretty(s.u))}</small></a><button class="x" data-del="${i}" aria-label="Remove">×</button></li>`).join('')
+  :'<li class="empty">Add the files and links you open most.</li>';store.set('shelf',shelf)}
+$('#shelf').onclick=e=>{if(e.target.dataset.del!==undefined){shelf.splice(+e.target.dataset.del,1);renderShelf()}};
+$('#shelfToggle').onclick=()=>{$('#shelfForm').hidden=false;$('#shelfName').focus()};
+$('#shelfCancel').onclick=()=>{$('#shelfForm').hidden=true};
+$('#shelfUrl').addEventListener('drop',e=>{const f=e.dataTransfer.getData('text/uri-list')||e.dataTransfer.getData('text/plain');if(f){e.preventDefault();$('#shelfUrl').value=f.trim();
+  if(!$('#shelfName').value)$('#shelfName').value=pretty(f.trim().split('/').filter(Boolean).pop()||'')}});
+$('#shelfForm').onsubmit=e=>{e.preventDefault();let u=$('#shelfUrl').value.trim(),n=$('#shelfName').value.trim();if(!u)return;
+  if(u.startsWith('/'))u='file://'+encodeURI(u);else if(!/^[a-z]+:/i.test(u))u='https://'+u;
+  shelf.push({n:n||pretty(u),u});$('#shelfName').value='';$('#shelfUrl').value='';$('#shelfForm').hidden=true;renderShelf()};
+renderShelf();
+
+/* ---------- reference tabs ---------- */
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  ['stats','brain','bands','erp','r','read'].forEach(t=>$('#tab-'+t).hidden=t!==b.dataset.t);store.set('tab2',b.dataset.t)});
+document.querySelector(`#tabs button[data-t="${store.get('tab2','stats')}"]`)?.click();
+
+/* ---------- notes ---------- */
+$('#notes').value=store.get('notes','');let nt;
+$('#notes').oninput=()=>{clearTimeout(nt);$('#saved').textContent='Saving…';nt=setTimeout(()=>{store.set('notes',$('#notes').value);$('#saved').textContent='Saved automatically in this browser.'},400)};
+$('#dl').onclick=()=>{const b=new Blob([$('#notes').value],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`study-notes-${dayKey()}.md`;a.click()};
+</script>
+</body>
+</html>
