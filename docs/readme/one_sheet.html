@@ -1,0 +1,314 @@
+<title>Study Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Caveat:wght@600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Identity: a ruled study notebook. Pale blue rules and a red margin line, highlighter yellow swipes, index cards pinned at slight angles, a focus timer ring. Dark mode is the same desk at night under a lamp. */
+:root {
+  --page: #f5f8fc;
+  --rule: #d9e4f1;
+  --margin: #e98a8a;
+  --ink: #1e2a3a;
+  --muted: #5d6b7e;
+  --teal: #0c7a83;
+  --hl: #ffe266;
+  --tomato: #e0603f;
+  --card: #ffffff;
+  --cardline: #c9d6e6;
+  --serif: "DM Serif Display", Georgia, serif;
+  --body: "Source Sans 3", "Segoe UI", sans-serif;
+  --hand: "Caveat", "Comic Sans MS", cursive;
+  --mono: "DM Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #12171e; --rule: #1d2632; --margin: #7a3a3a; --ink: #e8edf3; --muted: #9aa8ba; --teal: #52cbc2;
+    --hl: #8a7420; --tomato: #ff8a66; --card: #1a212b; --cardline: #2c3746;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #12171e; --rule: #1d2632; --margin: #7a3a3a; --ink: #e8edf3; --muted: #9aa8ba; --teal: #52cbc2;
+  --hl: #8a7420; --tomato: #ff8a66; --card: #1a212b; --cardline: #2c3746;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--page);
+  background-image: linear-gradient(90deg, transparent 58px, var(--margin) 58px, var(--margin) 60px, transparent 60px), linear-gradient(var(--rule) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 28px;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15.5px;
+  line-height: 1.45;
+  margin: 0;
+}
+.sheet { width: 960px; margin: 0 auto; }
+section { padding: 34px 40px 34px 92px; position: relative; }
+.hand { font-family: var(--hand); font-size: 22px; color: var(--tomato); line-height: 1; }
+.hl { background: linear-gradient(transparent 12%, var(--hl) 12%, var(--hl) 88%, transparent 88%); background-size: 100% 100%; background-repeat: no-repeat; padding: 0 3px; animation: swipe .9s .3s ease-out both; }
+@keyframes swipe { from { background-size: 0% 100%; } }
+h1 { font-family: var(--serif); font-weight: 400; font-size: 64px; line-height: .98; margin: 6px 0 12px; letter-spacing: -.005em; }
+h2 { font-family: var(--serif); font-weight: 400; font-size: 36px; line-height: 1.05; margin: 4px 0 10px; }
+.lede { font-size: 17px; max-width: 54ch; margin: 0; }
+.pager { position: absolute; left: 14px; top: 38px; font-family: var(--mono); font-size: 11px; color: var(--margin); writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: .14em; text-transform: uppercase; }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: 1fr 290px; gap: 30px; align-items: center; }
+.searchbar { margin-top: 18px; display: flex; align-items: center; gap: 10px; background: var(--card); border: 1.5px solid var(--cardline); border-radius: 8px; padding: 10px 12px; max-width: 470px; }
+.searchbar .lbl { font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+.searchbar .q { flex: 1; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; }
+.caret { display: inline-block; width: 2px; height: 18px; background: var(--teal); vertical-align: -3px; margin-left: 2px; animation: caret 1s steps(2) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.searchbar .go { background: var(--teal); color: #fff; font-weight: 700; font-size: 13px; padding: 5px 12px; border-radius: 5px; }
+.facts { display: flex; gap: 22px; margin-top: 18px; }
+.facts div { font-size: 13px; color: var(--muted); line-height: 1.2; }
+.facts b { display: block; font-family: var(--serif); font-weight: 400; font-size: 30px; color: var(--ink); }
+.timer { position: relative; width: 270px; height: 290px; }
+.timer .tcard { position: absolute; inset: 0; background: var(--card); border: 1.5px solid var(--cardline); border-radius: 10px; transform: rotate(2deg); box-shadow: 4px 6px 0 var(--rule); }
+.timer svg { position: absolute; left: 35px; top: 30px; width: 200px; height: 200px; }
+.timer .track { fill: none; stroke: var(--rule); stroke-width: 12; }
+.timer .prog { fill: none; stroke: var(--tomato); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 534; transform: rotate(-90deg); transform-origin: 100px 100px; animation: countdown 12s linear infinite; }
+@keyframes countdown { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 534; } }
+.timer .tick { fill: var(--muted); }
+.timer .face { position: absolute; left: 35px; top: 30px; width: 200px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.timer .face b { font-family: var(--mono); font-size: 40px; font-weight: 500; }
+.timer .face span { font-size: 13px; color: var(--muted); }
+.timer .modes { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; gap: 6px; transform: rotate(2deg); }
+.timer .modes i { font-style: normal; font-family: var(--mono); font-size: 11px; padding: 2px 7px; border: 1px solid var(--cardline); border-radius: 10px; color: var(--muted); }
+.timer .modes i.on { background: var(--tomato); border-color: var(--tomato); color: #fff; }
+.timer .note { position: absolute; right: -16px; top: -14px; transform: rotate(8deg); }
+
+/* ---------- search ---------- */
+.flow { display: grid; grid-template-columns: 200px 1fr; gap: 26px; margin-top: 14px; }
+.query { background: var(--card); border: 1.5px solid var(--cardline); border-radius: 8px; padding: 12px; font-size: 13.5px; align-self: start; }
+.query .t { font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+.query .v { font-weight: 700; font-size: 16px; margin: 4px 0 10px; }
+.query .arrowx { font-family: var(--hand); font-size: 20px; color: var(--teal); }
+.outs { display: grid; grid-template-columns: 1fr 1.25fr; gap: 14px; }
+.out { background: var(--card); border: 1.5px solid var(--cardline); border-radius: 8px; padding: 12px 14px; font-size: 13px; animation: slidein .6s ease-out both; }
+.out:nth-child(2) { animation-delay: .25s; }
+@keyframes slidein { from { opacity: 0; transform: translateX(-16px); } }
+.out h3 { margin: 0 0 6px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.out .src { font-family: var(--serif); font-size: 21px; margin-bottom: 4px; }
+.paper { border-top: 1px dashed var(--cardline); padding: 7px 0 6px; animation: pop .4s ease-out both; }
+.paper:nth-of-type(2) { animation-delay: .7s; } .paper:nth-of-type(3) { animation-delay: .9s; } .paper:nth-of-type(4) { animation-delay: 1.1s; }
+@keyframes pop { from { opacity: 0; transform: translateY(6px); } }
+.paper b { display: block; font-size: 13.5px; }
+.paper .m { font-size: 11.5px; color: var(--muted); }
+.pill { display: inline-block; font-family: var(--mono); font-size: 10.5px; padding: 1px 6px; border-radius: 9px; border: 1px solid var(--cardline); margin: 3px 4px 0 0; }
+.pill.c { background: var(--teal); border-color: var(--teal); color: #fff; }
+.pill.f { border-color: var(--teal); color: var(--teal); }
+.chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; }
+.chips .k { font-family: var(--hand); font-size: 20px; color: var(--tomato); margin-right: 4px; }
+.chips span.c { border: 1.5px solid var(--cardline); background: var(--card); padding: 2px 9px; border-radius: 12px; animation: pop .35s ease-out both; }
+.chips span.c:nth-child(odd) { animation-delay: .2s; }
+.chips span.c.btn { border-color: var(--teal); color: var(--teal); font-weight: 600; }
+
+/* ---------- desk ---------- */
+.desk { position: relative; height: 330px; margin-top: 8px; }
+.ic { position: absolute; background: var(--card); border: 1.5px solid var(--cardline); border-radius: 6px; padding: 12px 14px; font-size: 13px; box-shadow: 3px 5px 0 var(--rule); animation: drop .55s cubic-bezier(.2,.9,.3,1.25) both; }
+.ic h3 { font-family: var(--serif); font-weight: 400; font-size: 22px; margin: 0 0 6px; }
+.ic .pin { position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; border-radius: 50%; background: var(--tomato); box-shadow: 0 2px 0 rgba(0,0,0,.2); }
+@keyframes drop { from { opacity: 0; transform: translateY(-24px) rotate(var(--r)); } to { transform: rotate(var(--r)); } }
+.ic ul { margin: 0; padding-left: 16px; }
+.ic li { margin: 2px 0; }
+.bars7 { display: flex; align-items: flex-end; gap: 6px; height: 54px; margin: 8px 0 4px; border-bottom: 1.5px solid var(--cardline); }
+.bars7 i { flex: 1; background: var(--tomato); border-radius: 2px 2px 0 0; transform-origin: bottom; animation: growy .6s ease-out both; opacity: .85; }
+.bars7 i:nth-child(2) { animation-delay: .7s; } .bars7 i:nth-child(3) { animation-delay: .8s; } .bars7 i:nth-child(4) { animation-delay: .9s; } .bars7 i:nth-child(5) { animation-delay: 1s; } .bars7 i:nth-child(6) { animation-delay: 1.1s; } .bars7 i:nth-child(7) { animation-delay: 1.2s; } .bars7 i:nth-child(1) { animation-delay: .6s; }
+@keyframes growy { from { transform: scaleY(0); } }
+.tiny { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.apa { font-size: 12px; background: var(--page); border-left: 3px solid var(--teal); padding: 6px 8px; margin-top: 6px; }
+.check { list-style: none; padding: 0 !important; }
+.check li::before { content: "☐ "; color: var(--muted); }
+.check li.d { text-decoration: line-through; color: var(--muted); }
+.check li.d::before { content: "☑ "; color: var(--teal); }
+
+/* ---------- reference ---------- */
+.refgrid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 16px; margin-top: 10px; }
+.fc { background: var(--card); border: 1.5px solid var(--cardline); border-radius: 8px; padding: 12px 14px; font-size: 12.8px; animation: flip .6s ease-out both; transform-origin: top; }
+@keyframes flip { from { opacity: 0; transform: perspective(600px) rotateX(-70deg); } }
+.fc h3 { margin: 0 0 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); font-weight: 500; }
+.fc:nth-child(2) { animation-delay: .15s; } .fc:nth-child(3) { animation-delay: .3s; } .fc:nth-child(4) { animation-delay: .45s; }
+.tests div { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-bottom: 1px dotted var(--cardline); padding: 3px 0; }
+.tests div span:last-child { font-weight: 600; }
+.bands { display: grid; gap: 5px; }
+.band { display: grid; grid-template-columns: 80px 1fr; gap: 8px; align-items: center; }
+.band b { font-family: var(--serif); font-weight: 400; font-size: 16px; }
+.band .barb { position: relative; height: 20px; background: var(--page); border-radius: 3px; }
+.band .barb i { position: absolute; top: 0; bottom: 0; background: var(--teal); border-radius: 3px; opacity: .85; animation: wipe .6s ease-out both; }
+.band .barb span { position: absolute; left: 6px; top: 1px; font-size: 11.5px; white-space: nowrap; }
+.band .barb span.r { left: auto; right: 6px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+@keyframes wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.erp { position: relative; height: 150px; margin-top: 4px; }
+.erp .axis { position: absolute; left: 0; right: 0; top: 74px; height: 2px; background: var(--ink); }
+.erp .mk { position: absolute; transform: translateX(-50%); text-align: center; font-size: 11px; line-height: 1.15; width: 96px; animation: pop .4s ease-out both; }
+.erp .mk b { font-family: var(--mono); font-size: 11.5px; display: block; color: var(--tomato); }
+.erp .up { bottom: 86px; } .erp .dn { top: 86px; }
+.erp .mk i { display: block; font-style: normal; font-family: var(--mono); font-size: 9.5px; color: var(--muted); }
+.erp .dot { position: absolute; top: 69px; width: 12px; height: 12px; border-radius: 50%; background: var(--tomato); transform: translateX(-50%); }
+.erp .ms { position: absolute; top: 64px; font-family: var(--mono); font-size: 9.5px; color: var(--muted); transform: translateX(-50%); }
+.lme { font-family: var(--mono); font-size: 11.5px; background: var(--page); padding: 8px 10px; border-radius: 4px; line-height: 1.6; }
+.passes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.passes div { border-top: 3px solid var(--teal); padding-top: 4px; font-size: 12px; line-height: 1.3; }
+.passes b { font-family: var(--serif); font-weight: 400; font-size: 17px; display: block; }
+.regions { margin-top: 8px; font-size: 12px; color: var(--muted); }
+
+/* ---------- use ---------- */
+.use { display: grid; grid-template-columns: 1fr 1.1fr; gap: 26px; margin-top: 10px; }
+.steps { counter-reset: s; display: grid; gap: 10px; }
+.stp { display: grid; grid-template-columns: 40px 1fr; gap: 8px; align-items: start; font-size: 14.5px; animation: pop .4s ease-out both; }
+.stp:nth-child(2) { animation-delay: .2s; } .stp:nth-child(3) { animation-delay: .4s; }
+.stp .n { font-family: var(--hand); font-size: 34px; line-height: .9; color: var(--tomato); }
+kbd { font-family: var(--mono); font-size: 13px; border: 1.5px solid var(--cardline); border-bottom-width: 3px; border-radius: 4px; padding: 0 6px; background: var(--card); }
+.priv { position: relative; }
+.priv svg { width: 100%; height: auto; display: block; }
+.priv text { font-family: var(--body); fill: var(--ink); font-size: 13px; }
+.priv .lb { font-family: var(--mono); font-size: 10.5px; fill: var(--muted); }
+.priv .box { fill: var(--card); stroke: var(--cardline); stroke-width: 1.5; }
+.priv .me { fill: var(--card); stroke: var(--teal); stroke-width: 2.5; }
+.priv .ln { fill: none; stroke: var(--cardline); stroke-width: 2; }
+.priv .pk { fill: none; stroke: var(--teal); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 8 300; animation: packet 2.6s linear infinite; }
+.priv .pk.b { animation-delay: 1.3s; }
+@keyframes packet { from { stroke-dashoffset: 8; } to { stroke-dashoffset: -300; } }
+.priv .no { stroke: var(--tomato); stroke-width: 2.5; opacity: .75; }
+.priv .nt { fill: var(--tomato); font-family: var(--hand); font-size: 20px; }
+.mit { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+/* ---------- responsive ---------- */
+</style>
+
+<main class="sheet">
+
+<section class="hero" data-panel="01_hero" data-alt="Study Hub: a single file study dashboard for researchers and students, built for cognitive science. Stuck on a topic? Type it once and get a plain language explanation and the top papers on one page, then keep a focus timer, tasks, a reading list and notes next to them. A search box shows the example query predictive coding. Facts: 1 HTML file, no install and no account, 8 top papers per search drawn from 250M+ scholarly works on OpenAlex. Animated focus timer card: a ring counts down a 25 minute focus session, with 25, 50, 5 and 15 minute modes.">
+  <div class="pager">Study Hub · page 1</div>
+  <div>
+    <div class="hand">stuck on something?</div>
+    <h1>Type it once.<br>Get the <span class="hl">explanation</span> and the papers.</h1>
+    <p class="lede">A single file study dashboard for researchers and students, built for cognitive science. A focus timer, tasks, a reading list and notes sit right next to your search.</p>
+    <div class="searchbar"><span class="lbl">Search</span><span class="q">predictive coding<span class="caret"></span></span><span class="go">Search</span></div>
+    <div class="facts">
+      <div><b>1</b>HTML file, no install, no account</div>
+      <div><b>8</b>top papers per search</div>
+      <div><b>250M+</b>works on OpenAlex</div>
+    </div>
+  </div>
+  <div class="timer">
+    <div class="tcard"></div>
+    <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="track" cx="100" cy="100" r="85"/><circle class="prog" cx="100" cy="100" r="85"/></svg>
+    <div class="face"><b>25:00</b><span>focus · predictive coding</span></div>
+    <div class="modes"><i class="on">25</i><i>50</i><i>5</i><i>15</i></div>
+    <div class="note hand">focus!</div>
+  </div>
+</section>
+
+<section data-panel="02_search" data-alt="How a search works. One query fans out to two answers on one page. A quick explanation from Wikipedia. Eight top papers from OpenAlex, with authors, year, journal, a short abstract, citation count and free PDF links when available; example results from the screenshot for predictive coding include The Predictive Coding Account of Psychosis (Sterzer, Adams, Fletcher and others, 2018, Biological Psychiatry, 854 citations, free PDF). Sort by most relevant, most cited, newest, or reviews only. One click buttons: Explain with Claude, Stanford Encyclopedia of Philosophy, lectures, and focus on this. Optional extra tabs: Google Scholar, PubMed, PsyArXiv, Semantic Scholar, OpenNeuro, SEP and YouTube. Press slash anywhere to jump to the search box.">
+  <div class="pager">page 2 · search</div>
+  <div class="hand">one query, one page</div>
+  <h2>A plain explanation, then the <span class="hl">papers worth reading</span></h2>
+  <div class="flow">
+    <div class="query"><div class="t">You type</div><div class="v">predictive coding</div><div class="arrowx">and get both →</div><div class="t" style="margin-top:10px">Shortcut</div><div>press <kbd>/</kbd> anywhere to jump to search</div></div>
+    <div class="outs">
+      <div class="out"><h3>Quick explanation</h3><div class="src">Wikipedia</div>A short plain language summary of the topic with a link to the full article, plus one click buttons to go deeper.
+        <div style="margin-top:8px"><span class="pill f">Explain with Claude</span><span class="pill">Stanford Encyclopedia</span><span class="pill">Lectures</span><span class="pill">Focus on this</span></div></div>
+      <div class="out"><h3>Top 8 papers</h3><div class="src">OpenAlex</div>
+        <div class="paper"><b>The Predictive Coding Account of Psychosis</b><span class="m">Sterzer, Adams, Fletcher et al. · 2018 · Biological Psychiatry</span><br><span class="pill c">854 citations</span><span class="pill f">Free PDF</span><span class="pill">+ Reading list</span></div>
+        <div class="paper"><b>Predictive coding</b><span class="m">Huang, Rao · 2011 · Wiley Interdisciplinary Reviews Cognitive Science</span><br><span class="pill c">416 citations</span><span class="pill">+ Reading list</span></div>
+        <div class="paper"><span class="m">Authors, year, journal, short abstract, citations, free PDF when available.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="chips"><span class="k">sort:</span><span class="c btn">most relevant</span><span class="c">most cited</span><span class="c">newest</span><span class="c">reviews only</span><span class="k" style="margin-left:14px">also open:</span><span class="c">Google Scholar</span><span class="c">PubMed</span><span class="c">PsyArXiv</span><span class="c">Semantic Scholar</span><span class="c">OpenNeuro</span><span class="c">SEP</span><span class="c">YouTube</span></div>
+</section>
+
+<section data-panel="03_desk" data-alt="The study desk around the search. Focus timer: 25 or 50 minute focus and 5 or 15 minute break modes, labelled with your topic; it keeps a 7 day chart, a daily streak and a session log, and shows a notification when time is up. Reading list: save papers from search results, or paste a DOI to see the paper's details and copy an APA 7 citation. Study tasks you can tick off. My shelf: links and files you open often. Scratchpad: notes that save as you type and export to Markdown.">
+  <div class="pager">page 3 · the desk</div>
+  <div class="hand">everything else, pinned next to it</div>
+  <h2>A timer, a reading list, tasks, a shelf and a <span class="hl">scratchpad</span></h2>
+  <div class="desk">
+    <div class="ic" style="--r:-2deg;left:0;top:10px;width:250px;animation-delay:.1s"><span class="pin"></span><h3>Focus timer</h3>25 or 50 min focus, 5 or 15 min breaks, labelled with your topic.
+      <div class="bars7"><i style="height:40%"></i><i style="height:70%"></i><i style="height:25%"></i><i style="height:90%"></i><i style="height:55%"></i><i style="height:65%"></i><i style="height:35%"></i></div>
+      <span class="tiny">7 day chart · daily streak · session log · notification at zero</span></div>
+    <div class="ic" style="--r:1.5deg;left:272px;top:0;width:290px;animation-delay:.3s"><span class="pin"></span><h3>Reading list</h3>Save papers straight from search results, or paste a DOI:
+      <div class="apa">DOI → title, authors, journal, year<br><b>Copy APA 7 citation</b></div></div>
+    <div class="ic" style="--r:-1deg;left:590px;top:20px;width:240px;animation-delay:.5s"><span class="pin"></span><h3>Study tasks</h3>
+      <ul class="check"><li class="d">add a task</li><li class="d">tick it off</li><li>clear the done ones</li></ul></div>
+    <div class="ic" style="--r:2deg;left:300px;top:190px;width:250px;animation-delay:.7s"><span class="pin"></span><h3>My shelf</h3>Links and files you open often, one click away.</div>
+    <div class="ic" style="--r:-1.5deg;left:590px;top:180px;width:240px;animation-delay:.9s"><span class="pin"></span><h3>Scratchpad</h3>Saves as you type.<br>Exports to <b>Markdown</b>.</div>
+    <div class="hand" style="position:absolute;left:20px;top:280px;font-size:24px;transform:rotate(-3deg)">all saved in your browser, nowhere else</div>
+  </div>
+</section>
+
+<section data-panel="04_reference" data-alt="Quick reference tabs for cognitive science. Choosing a stats test: 2 groups, independent t test or Mann Whitney if non normal; same people in 2 conditions, paired t test or Wilcoxon signed rank; 3 or more groups, one way ANOVA or Kruskal Wallis; trials nested in participants, linear mixed model (lmer) with random effects; binary outcome, logistic mixed model (glmer, binomial); many channels by time points, cluster based permutation tests. EEG frequency bands: delta 0.5 to 4 Hz deep sleep; theta 4 to 8 Hz memory encoding and cognitive control; alpha 8 to 13 Hz relaxed wakefulness and inhibition; beta 13 to 30 Hz active thinking and motor control; gamma 30 to 100 Hz feature binding and perception. ERP components by latency: ERN about 50 to 100 ms after an error, P1 about 100 ms, N1 100 to 200 ms, N170 about 170 ms for faces, MMN 150 to 250 ms auditory deviance, P300 300 to 600 ms context updating, N400 about 400 ms semantic violations, LPP 400 to 1000+ ms emotional salience. lme4 mixed model syntax: random intercept (1 | g), intercept and slope (1 + x | g), crossed effects (1 | a) + (1 | b). Three pass reading: pass 1, 5 minutes, title, abstract, figures, conclusion; pass 2, 30 minutes, intro and methods; pass 3, deep, results in detail and limitations. Also a brain regions tab.">
+  <div class="pager">page 4 · flashcards</div>
+  <div class="hand">quick reference, always one tab away</div>
+  <h2>Six cheat sheets for <span class="hl">cognitive science</span></h2>
+  <div class="refgrid">
+    <div class="fc"><h3>Choosing a stats test</h3>
+      <div class="tests">
+        <div><span>2 groups, continuous</span><span>t test · Mann Whitney</span></div>
+        <div><span>Same people, 2 conditions</span><span>paired t · Wilcoxon</span></div>
+        <div><span>3+ groups</span><span>ANOVA · Kruskal Wallis</span></div>
+        <div><span>Trials nested in people</span><span>lmer, random effects</span></div>
+        <div><span>Binary outcome</span><span>glmer, binomial</span></div>
+        <div><span>Channels × time points</span><span>cluster permutation</span></div>
+      </div></div>
+    <div class="fc"><h3>EEG frequency bands, Hz</h3>
+      <div class="bands">
+        <div class="band"><b>δ delta</b><div class="barb"><i style="left:0;width:4%"></i><span style="left:7%">deep sleep</span><span class="r">0.5 to 4</span></div></div>
+        <div class="band"><b>θ theta</b><div class="barb"><i style="left:4%;width:4%;animation-delay:.15s"></i><span style="left:11%">memory, control</span><span class="r">4 to 8</span></div></div>
+        <div class="band"><b>α alpha</b><div class="barb"><i style="left:8%;width:5%;animation-delay:.3s"></i><span style="left:16%">relaxed, inhibition</span><span class="r">8 to 13</span></div></div>
+        <div class="band"><b>β beta</b><div class="barb"><i style="left:13%;width:17%;animation-delay:.45s"></i><span style="left:33%">thinking, motor</span><span class="r">13 to 30</span></div></div>
+        <div class="band"><b>γ gamma</b><div class="barb"><i style="left:30%;width:70%;animation-delay:.6s"></i><span style="left:33%;color:#fff">binding, perception</span><span class="r" style="color:#fff">30 to 100</span></div></div>
+      </div></div>
+    <div class="fc" style="grid-column: 1 / span 2"><h3>ERP components, by latency after the event</h3>
+      <div class="erp">
+        <div class="axis"></div>
+        <div class="dot" style="left:6%"></div><div class="mk up" style="left:6%;animation-delay:0.6s"><b>ERN</b><i>50 to 100 ms after an error</i>error monitoring</div>
+        <div class="dot" style="left:16%"></div><div class="mk dn" style="left:16%;animation-delay:0.7s"><b>P1</b><i>~100 ms</i>early visual</div>
+        <div class="dot" style="left:26%"></div><div class="mk up" style="left:26%;animation-delay:0.8s"><b>N1</b><i>100 to 200 ms</i>sensory, attention</div>
+        <div class="dot" style="left:36%"></div><div class="mk dn" style="left:36%;animation-delay:0.9s"><b>N170</b><i>~170 ms</i>faces</div>
+        <div class="dot" style="left:46%"></div><div class="mk up" style="left:46%;animation-delay:1.0s"><b>MMN</b><i>150 to 250 ms</i>auditory deviance</div>
+        <div class="dot" style="left:60%"></div><div class="mk dn" style="left:60%;animation-delay:1.1s"><b>P300</b><i>300 to 600 ms</i>context updating</div>
+        <div class="dot" style="left:73%"></div><div class="mk up" style="left:73%;animation-delay:1.2s"><b>N400</b><i>~400 ms</i>semantic surprise</div>
+        <div class="dot" style="left:88%"></div><div class="mk dn" style="left:88%;animation-delay:1.3s"><b>LPP</b><i>400 to 1000+ ms</i>emotional salience</div>
+      </div></div>
+    <div class="fc"><h3>lme4 mixed model syntax</h3>
+      <div class="lme">lmer(score ~ condition<br>&#160;&#160;+ (1 | participant) + (1 | item), data = d)</div>
+      <div class="regions">(1 | g) random intercept · (1 + x | g) intercept and slope · (1 | a) + (1 | b) crossed effects</div></div>
+    <div class="fc"><h3>Reading a paper in three passes</h3>
+      <div class="passes"><div><b>1 · 5 min</b>Title, abstract, figures, conclusion. Worth it?</div><div><b>2 · 30 min</b>Intro and methods: question, sample, design, analysis.</div><div><b>3 · deep</b>Results in detail. Could you rerun it? Limitations?</div></div>
+      <div class="regions">Plus a brain regions tab: prefrontal cortex to cerebellum, with key functions.</div></div>
+  </div>
+</section>
+
+<section data-panel="05_use" data-alt="Use it in three steps: download index.html or clone the repo; open it in Chrome, Safari, Firefox, Edge or Brave; click the pencil next to the greeting to set your name. Nothing to install and no account; search and DOI lookup need an internet connection. Privacy: there is no server and no tracking. Tasks, notes, reading list and focus history live only in your browser's localStorage. When you search, the query goes straight from your browser to the public Wikipedia and OpenAlex APIs. MIT license.">
+  <div class="pager">page 5 · use it</div>
+  <div class="hand">no install, no account, no server</div>
+  <h2>Open one file. <span class="hl">That's the setup.</span></h2>
+  <div class="use">
+    <div class="steps">
+      <div class="stp"><span class="n">1</span><span>Download <b>index.html</b>, or clone the repo.</span></div>
+      <div class="stp"><span class="n">2</span><span>Open it in your browser: Chrome, Safari, Firefox, Edge or Brave.</span></div>
+      <div class="stp"><span class="n">3</span><span>Click <kbd>✎</kbd> next to the greeting to set your name. Then press <kbd>/</kbd> and search.</span></div>
+      <div class="mit">Search and DOI lookup need an internet connection. MIT license.</div>
+    </div>
+    <div class="priv">
+      <svg viewBox="0 0 440 230" aria-hidden="true">
+        <path class="ln" d="M160 70 C220 70 230 45 290 45"/>
+        <path class="ln" d="M160 100 C220 100 230 135 290 135"/>
+        <path class="pk" d="M160 70 C220 70 230 45 290 45"/>
+        <path class="pk b" d="M160 100 C220 100 230 135 290 135"/>
+        <rect class="me" x="0" y="40" width="160" height="120" rx="10"/>
+        <text x="26" y="68" style="font-weight:700">Your browser</text>
+        <text class="lb" x="26" y="90">index.html</text>
+        <rect class="box" x="12" y="104" width="136" height="42" rx="5"/>
+        <text class="lb" x="22" y="121">localStorage</text>
+        <text class="lb" x="22" y="137">tasks, notes, focus</text>
+        <rect class="box" x="290" y="22" width="140" height="46" rx="8"/><text x="304" y="50">Wikipedia API</text>
+        <rect class="box" x="290" y="112" width="140" height="46" rx="8"/><text x="304" y="140">OpenAlex API</text>
+        <rect class="box" x="120" y="186" width="120" height="36" rx="8" style="stroke-dasharray:5 4"/><text x="152" y="209" class="lb">a server</text>
+        <line class="no" x1="120" y1="186" x2="240" y2="222"/><line class="no" x1="240" y1="186" x2="120" y2="222"/>
+        <text class="nt" x="252" y="212">none, and no tracking</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+</main>
